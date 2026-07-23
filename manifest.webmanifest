@@ -1,0 +1,10 @@
+{
+  "name": "JULE Browser",
+  "short_name": "JULE",
+  "description": "JULE Browser — Open Anything.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}

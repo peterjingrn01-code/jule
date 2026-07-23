@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 130" role="img" aria-labelledby="title desc">
+  <title id="title">JSL-ian logo</title>
+  <desc id="desc">A dimensional sphere with a sweeping structural tail.</desc>
+  <defs>
+    <radialGradient id="orb" cx="34%" cy="28%" r="72%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.18" stop-color="#d7ebff"/>
+      <stop offset="0.48" stop-color="#5ba7ef"/>
+      <stop offset="0.78" stop-color="#225da9"/>
+      <stop offset="1" stop-color="#12376f"/>
+    </radialGradient>
+    <linearGradient id="tail" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a73e8"/>
+      <stop offset="0.55" stop-color="#25559a"/>
+      <stop offset="1" stop-color="#202124"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#0d2342" flood-opacity=".25"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M81 73 C104 83 124 96 151 123 C126 112 103 102 70 93 Z" fill="url(#tail)"/>
+    <circle cx="65" cy="58" r="47" fill="url(#orb)" stroke="#183b68" stroke-width="2"/>
+    <path d="M31 43 C46 20 77 13 98 30" fill="none" stroke="#ffffff" stroke-opacity=".72" stroke-width="6" stroke-linecap="round"/>
+    <path d="M34 74 C55 91 83 89 99 70" fill="none" stroke="#0b2f63" stroke-opacity=".42" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>
