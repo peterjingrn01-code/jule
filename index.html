@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="JULE Browser — Open Anything.">
+  <title>JULE™ Browser</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root{
+      --text:#202124;
+      --muted:#6b7280;
+      --line:#dfe3e8;
+      --soft:#f6f7f9;
+      --shadow:0 2px 12px rgba(32,33,36,.10);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#fff;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    body{display:flex;min-height:100vh;min-height:100dvh;flex-direction:column}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+
+    .browser-bar{
+      position:sticky;top:0;z-index:10;
+      display:flex;align-items:center;gap:9px;
+      min-height:66px;padding:10px 14px;
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(14px);
+    }
+    .brand-mini{width:38px;height:38px;object-fit:contain;flex:0 0 auto}
+    .nav-button{
+      width:40px;height:40px;border:0;border-radius:50%;background:transparent;
+      color:#444;display:grid;place-items:center;cursor:pointer;font-size:21px;
+    }
+    .nav-button:hover{background:var(--soft)}
+    .nav-button:disabled{opacity:.28;cursor:default;background:transparent}
+    .address-form{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+    .address-wrap{
+      flex:1;min-width:0;height:44px;display:flex;align-items:center;
+      border:1px solid var(--line);border-radius:23px;background:#fff;
+      box-shadow:0 1px 5px rgba(32,33,36,.06);
+    }
+    .lock{padding-left:15px;color:#7a8088;font-size:14px}
+    .address{
+      width:100%;height:100%;border:0;outline:0;background:transparent;
+      padding:0 15px 0 9px;color:var(--text);font-size:16px;
+    }
+    .open-button{
+      height:44px;border:0;border-radius:23px;padding:0 22px;
+      background:var(--text);color:#fff;font-weight:650;cursor:pointer;
+    }
+    .open-button:hover{opacity:.9}
+
+    main{flex:1;display:flex;align-items:center;justify-content:center;padding:42px 18px 30px}
+    .home{width:min(720px,100%);text-align:center;margin-top:-24px}
+    .brand-logo{display:block;width:clamp(132px,24vw,190px);height:auto;margin:0 auto 12px;filter:drop-shadow(0 5px 12px rgba(32,33,36,.12))}
+    h1{margin:0;font-size:clamp(42px,9vw,72px);letter-spacing:-3px;font-weight:780}
+    .tagline{margin:8px 0 30px;color:var(--muted);font-size:17px}
+    .message{min-height:24px;margin-top:12px;color:#b3261e;font-size:14px}
+
+    .slots{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:24px}
+    .slot{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--muted);cursor:pointer;transition:.15s}
+    .slot:hover,.slot:focus-visible{background:var(--soft);color:var(--text);border-color:#b8bec7}
+    .slot.omega{font-size:19px;color:var(--text)}
+
+    footer{padding:17px 16px 20px;text-align:center;color:var(--muted);font-size:11px;line-height:1.65;border-top:1px solid #f0f1f3}
+    .footer-links{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-bottom:3px}
+    .footer-links a:hover{text-decoration:underline}
+    .legal{max-width:980px;margin:0 auto}
+
+    dialog{border:0;border-radius:18px;padding:0;width:min(520px,calc(100% - 32px));box-shadow:0 24px 80px rgba(0,0,0,.25)}
+    dialog::backdrop{background:rgba(0,0,0,.34)}
+    .about{padding:26px;text-align:left}
+    .about h2{margin:0 0 14px;font-size:26px}
+    .about p{margin:8px 0;color:#4b5563;line-height:1.55}
+    .close{margin-top:18px;border:0;border-radius:20px;padding:10px 18px;background:var(--text);color:#fff;cursor:pointer}
+
+    @media(max-width:720px){
+      .browser-bar{gap:5px;padding:8px;min-height:58px}
+      .brand-mini{width:31px;height:31px}
+      .nav-button{width:34px;height:34px;font-size:18px}
+      .nav-button.forward{display:none}
+      .address-wrap{height:42px}
+      .open-button{height:42px;padding:0 16px}
+      main{align-items:flex-start;padding-top:13vh}
+      .home{margin-top:0}
+      .brand-logo{width:132px}
+      footer{font-size:10px}
+    }
+    @media(max-width:470px){
+      .brand-mini,.nav-button.home-button{display:none}
+      .browser-bar{gap:4px}
+      .open-button{padding:0 14px}
+      .address{font-size:15px}
+    }
+  </style>
+</head>
+<body>
+  <header class="browser-bar" aria-label="JULE browser controls">
+    <img class="brand-mini" src="jsl-ian-jule-logo.png" alt="JSL-ian logo">
+    <button class="nav-button" id="backButton" type="button" aria-label="Back">←</button>
+    <button class="nav-button forward" id="forwardButton" type="button" aria-label="Forward">→</button>
+    <button class="nav-button" id="reloadButton" type="button" aria-label="Reload">↻</button>
+    <button class="nav-button home-button" id="homeButton" type="button" aria-label="Home">⌂</button>
+
+    <form class="address-form" id="openForm" autocomplete="off" novalidate>
+      <div class="address-wrap">
+        <span class="lock" aria-hidden="true">◉</span>
+        <input
+          id="openBar"
+          class="address"
+          type="text"
+          inputmode="url"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          placeholder="Enter a web address"
+          aria-label="Web address"
+        >
+      </div>
+      <button class="open-button" type="submit">Open</button>
+    </form>
+  </header>
+
+  <main>
+    <section class="home" aria-labelledby="jule-title">
+      <img class="brand-logo" src="jsl-ian-jule-logo.png" alt="JSL-ian Technologies logo">
+      <h1 id="jule-title">JULE</h1>
+      <p class="tagline">Open Anything.</p>
+      <div class="message" id="message" role="status" aria-live="polite"></div>
+
+      <nav class="slots" aria-label="JULE quick slots">
+        <button class="slot omega" type="button" data-action="home" aria-label="JULE home">Ω</button>
+        <button class="slot" type="button" data-slot="1">1</button>
+        <button class="slot" type="button" data-slot="2">2</button>
+        <button class="slot" type="button" data-slot="3">3</button>
+        <button class="slot" type="button" data-slot="4">4</button>
+        <button class="slot" type="button" data-slot="5">5</button>
+        <button class="slot" type="button" data-slot="6">6</button>
+        <button class="slot" type="button" data-slot="7">7</button>
+        <button class="slot" type="button" data-slot="8">8</button>
+      </nav>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="https://www.jsl-ian.com" target="_blank" rel="noopener">www.jsl-ian.com</a>
+      <a href="mailto:support@jsl-ian.com">support@jsl-ian.com</a>
+      <a href="tel:+18665888182">+1 (866) 588-8182</a>
+      <a href="#" id="aboutLink">About</a>
+    </div>
+    <div class="legal">
+      © 2026 JSL-ian Technologies Ltd. All Rights Reserved.<br>
+      JULE™, JSL™, JSL-ian™, Ω Engine™, Ω Coin™, Ziran Series™ and ZiranCoin™ are trademarks of JSL-ian Technologies Ltd.
+    </div>
+  </footer>
+
+  <dialog id="aboutDialog" aria-labelledby="aboutTitle">
+    <div class="about">
+      <h2 id="aboutTitle">JULE™ Browser</h2>
+      <p><strong>JSL Universal Language Engine</strong></p>
+      <p>A simple universal browser designed to open web addresses directly.</p>
+      <p>Support: <a href="mailto:support@jsl-ian.com">support@jsl-ian.com</a><br>Tel: <a href="tel:+18665888182">+1 (866) 588-8182</a></p>
+      <p>© 2026 JSL-ian Technologies Ltd. All Rights Reserved.</p>
+      <button class="close" id="closeAbout" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const form = document.getElementById('openForm');
+      const input = document.getElementById('openBar');
+      const message = document.getElementById('message');
+      const aboutDialog = document.getElementById('aboutDialog');
+
+      function normalizeAddress(raw) {
+        const value = raw.trim();
+        if (!value) throw new Error('Enter a web address.');
+        if (/\s/.test(value)) throw new Error('JULE opens addresses only. Use Discovery for searching.');
+        if (/^https?:\/\//i.test(value)) return value;
+        if (/^(localhost|127(?:\.\d{1,3}){3}|\[::1\])(?::\d+)?(?:\/.*)?$/i.test(value)) return 'http://' + value;
+        if (/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}(?::\d+)?(?:[/?#].*)?$/i.test(value)) return 'https://' + value;
+        throw new Error('Enter a complete web address, such as example.com.');
+      }
+
+      function openAddress(raw) {
+        try {
+          const url = normalizeAddress(raw);
+          message.textContent = '';
+          window.location.assign(url);
+        } catch (error) {
+          message.textContent = error.message;
+          input.focus();
+        }
+      }
+
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        openAddress(input.value);
+      });
+
+      document.getElementById('backButton').addEventListener('click', () => history.back());
+      document.getElementById('forwardButton').addEventListener('click', () => history.forward());
+      document.getElementById('reloadButton').addEventListener('click', () => location.reload());
+      document.getElementById('homeButton').addEventListener('click', () => location.assign('./'));
+
+      document.querySelector('[data-action="home"]').addEventListener('click', () => {
+        input.value = '';
+        message.textContent = '';
+        input.focus();
+      });
+
+      document.querySelectorAll('[data-slot]').forEach(button => {
+        button.addEventListener('click', () => {
+          const slot = button.dataset.slot;
+          const saved = localStorage.getItem('jule-slot-' + slot);
+          if (saved) return openAddress(saved);
+          message.textContent = input.value.trim()
+            ? 'Press and hold this number to save the address.'
+            : 'Enter an address first, then press and hold a number to save it.';
+          input.focus();
+        });
+
+        let timer;
+        const start = () => {
+          timer = window.setTimeout(() => {
+            try {
+              const url = normalizeAddress(input.value);
+              localStorage.setItem('jule-slot-' + button.dataset.slot, url);
+              message.textContent = 'Address saved to slot ' + button.dataset.slot + '.';
+            } catch (error) {
+              message.textContent = error.message;
+            }
+          }, 650);
+        };
+        const cancel = () => window.clearTimeout(timer);
+        button.addEventListener('pointerdown', start);
+        button.addEventListener('pointerup', cancel);
+        button.addEventListener('pointerleave', cancel);
+        button.addEventListener('pointercancel', cancel);
+      });
+
+      document.getElementById('aboutLink').addEventListener('click', event => {
+        event.preventDefault();
+        aboutDialog.showModal();
+      });
+      document.getElementById('closeAbout').addEventListener('click', () => aboutDialog.close());
+      aboutDialog.addEventListener('click', event => {
+        if (event.target === aboutDialog) aboutDialog.close();
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+      }
+    })();
+  </script>
+</body>
+</html>
