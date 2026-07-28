@@ -3,6 +3,7 @@
 ## Product definition
 JULE is a minimal browser interface: **Open Anything.**
 It is not a search engine. Search remains separate through the JSL Discovery Engine.
+JULE is a browser normalizer!
 
 ## Publish
 Upload all files in this folder to the root of the GitHub repository, then deploy with GitHub Pages or Cloudflare Pages.
